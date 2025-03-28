@@ -8,6 +8,21 @@ type Todo {
   done: Boolean!
 }
 
+"""Todo quick aggregations"""
+type AggregationsType {
+  """Total de tareas"""
+  total: Int!
+
+  """Tareas pendientes"""
+  pending: Int!
+
+  """Tareas completadas"""
+  completed: Int!
+
+  """Total de tareas completadas"""
+  totalTodosCompleted: Int! @deprecated(reason: "most used completed instead")
+}
+
 type Query {
   """Saluda al mundo"""
   hello: String!
@@ -19,13 +34,22 @@ type Query {
   randomFromZeroTo(to: Int): Int!
 
   """Lista de tareas"""
-  todos: [Todo!]!
+  todos(
+    """Estado de la tarea"""
+    status: Boolean
+  ): [Todo!]!
 
   """Obtiene una tarea por su ID"""
   todo(
     """ID de la tarea"""
     id: Int!
   ): Todo!
+
+  """Total de tareas"""
+  totalTodos: Int!
+
+  """Tareas completadas"""
+  aggregations: AggregationsType!
 }
 
 type Mutation {
@@ -34,6 +58,10 @@ type Mutation {
 
   """Actualiza una tarea"""
   updateTodo(updateTodoInput: UpdateTodoInput!): Todo!
+  removeTodo(
+    """ID de la tarea"""
+    id: Int!
+  ): Boolean!
 }
 
 input CreateTodoInput {

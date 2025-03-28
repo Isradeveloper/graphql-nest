@@ -2,14 +2,16 @@ import { Query, Resolver, Int, Args, Mutation } from '@nestjs/graphql';
 import { Todo } from './entities/todo.entity';
 import { TodoService } from './todo.service';
 import { UpdateTodoInput, CreateTodoInput } from './dtos/inputs';
+import { StatusArgs } from './dtos/args/status.args';
+import { AggregationsType } from './types/aggregations.type';
 
-@Resolver()
+@Resolver(() => Todo)
 export class TodoResolver {
   constructor(private readonly todoService: TodoService) {}
 
   @Query(() => [Todo], { name: 'todos', description: 'Lista de tareas' })
-  findAll(): Todo[] {
-    return this.todoService.findAll();
+  findAll(@Args() statusArgs: StatusArgs): Todo[] {
+    return this.todoService.findAll(statusArgs);
   }
 
   @Query(() => Todo, {
@@ -36,5 +38,50 @@ export class TodoResolver {
   })
   updateTodo(@Args('updateTodoInput') updateTodoInput: UpdateTodoInput) {
     return this.todoService.update(updateTodoInput);
+  }
+
+  @Mutation(() => Boolean)
+  removeTodo(
+    @Args('id', { type: () => Int, description: 'ID de la tarea' }) id: number,
+  ) {
+    return this.todoService.delete(id);
+  }
+
+  // Aggregations
+  @Query(() => Int, {
+    name: 'totalTodos',
+    description: 'Total de tareas',
+  })
+  totalTodos(): number {
+    return this.todoService.totalTodos;
+  }
+
+  // @Query(() => Int, {
+  //   name: 'completedTodos',
+  //   description: 'Tareas completadas',
+  // })
+  // completedTodos(): number {
+  //   return this.todoService.completedTodos;
+  // }
+
+  // @Query(() => Int, {
+  //   name: 'pendingTodos',
+  //   description: 'Tareas pendientes',
+  // })
+  // pendingTodos(): number {
+  //   return this.todoService.pendingTodos;
+  // }
+
+  @Query(() => AggregationsType, {
+    name: 'aggregations',
+    description: 'Tareas completadas',
+  })
+  aggregations(): AggregationsType {
+    return {
+      total: this.todoService.totalTodos,
+      pending: this.todoService.pendingTodos,
+      completed: this.todoService.completedTodos,
+      totalTodosCompleted: this.todoService.totalTodos,
+    };
   }
 }
