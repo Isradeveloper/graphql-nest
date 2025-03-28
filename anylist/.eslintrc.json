@@ -1,0 +1,16 @@
+{
+  "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ],
+    "padding-line-between-statements": [
+      "error",
+      { "blankLine": "always", "prev": "directive", "next": "class" }, // Espacio antes de clases
+      { "blankLine": "always", "prev": "class", "next": "*" }, // Espacio después de clases
+      { "blankLine": "always", "prev": "decorator", "next": "*" } // Espacio después de decoradores
+    ]
+  }
+}
