@@ -14,10 +14,15 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+  id        String   @id @default(uuid())
+  fullName  String
+  email     String   @unique
+  password  String
+  roles     String[] @default(["user"])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  isActive  Boolean  @default(true)
+  posts     Post[]
 }
 
 model Post {
@@ -26,5 +31,12 @@ model Post {
   content   String?
   published Boolean? @default(false)
   author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+  authorId  String?
+}
+
+model Item {
+  id            String @id @default(uuid())
+  name          String
+  quantity      Float
+  quantityUnits String
 }
