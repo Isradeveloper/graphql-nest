@@ -1,4 +1,5 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
+import { Item } from '../../items/entities/item.entity';
 
 @ObjectType()
 export class User {
@@ -25,4 +26,10 @@ export class User {
 
   @Field(() => Date)
   updatedAt: Date;
+
+  @Field(() => User, { nullable: true })
+  lastUpdateBy?: User | null;
+
+  // @Field(() => [Item], { nullable: true })
+  items?: Item[];
 }

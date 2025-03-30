@@ -2,13 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Item {
-  id: ID!
-  name: String!
-  quantity: Float!
-  quantityUnits: String!
-}
-
 type User {
   id: ID!
   fullName: String!
@@ -17,6 +10,9 @@ type User {
   isActive: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
+  lastUpdateBy: User
+  itemCount: Int!
+  items(limit: Int = 10, offset: Int = 0, search: String): [Item!]!
 }
 
 """
@@ -24,23 +20,44 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Item {
+  id: ID!
+  name: String!
+  quantity: Float!
+  quantityUnits: String!
+  user: User
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type AuthResponse {
   token: String!
   user: User!
 }
 
 type Query {
-  items: [Item!]!
+  items(limit: Int = 10, offset: Int = 0, search: String): [Item!]!
   item(id: ID!): Item!
+  users(roles: [ValidRoles!] = [], limit: Int = 10, offset: Int = 0, search: String): [User!]!
+  user(id: ID!): User!
   revalidateToken: AuthResponse!
+}
+
+enum ValidRoles {
+  admin
+  superUser
+  user
 }
 
 type Mutation {
   createItem(createItemInput: CreateItemInput!): Item!
   updateItem(updateItemInput: UpdateItemInput!): Item!
   removeItem(id: ID!): Boolean!
+  blockUser(id: ID!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
   signup(signupInput: SignUpInput!): AuthResponse!
   login(loginInput: LoginInput!): AuthResponse!
+  executeSeed: Boolean!
 }
 
 input CreateItemInput {
@@ -64,6 +81,15 @@ input UpdateItemInput {
   """Item quantity units"""
   quantityUnits: String
   id: ID!
+}
+
+input UpdateUserInput {
+  id: ID!
+  fullName: String
+  email: String
+  roles: [ValidRoles!]
+  password: String
+  isActive: Boolean
 }
 
 input SignUpInput {

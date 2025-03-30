@@ -58,9 +58,15 @@ export class AuthService {
   }
 
   async validateUser(id: string) {
-    const { password, ...user } = await this.usersService.findOneByID(id);
-    if (user.isActive === false)
-      throw new UnauthorizedException('User is inactive talk with an admin');
-    return user;
+    try {
+      const { password, ...user } = await this.usersService.findOneByID(id);
+
+      if (user.isActive === false)
+        throw new UnauthorizedException('User is inactive talk with an admin');
+      return user;
+    } catch (error) {
+      this.logger.error(error);
+      throw new UnauthorizedException('Invalid token');
+    }
   }
 }

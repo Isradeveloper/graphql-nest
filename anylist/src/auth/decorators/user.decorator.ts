@@ -26,6 +26,8 @@ export const CurrentUser = createParamDecorator(
       }
     }
 
-    throw new ForbiddenException('User does not have the required roles');
+    throw new ForbiddenException(
+      `User does not have the required roles [${roles.join(', ')}]`,
+    );
   },
 );

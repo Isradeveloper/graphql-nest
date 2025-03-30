@@ -22,21 +22,23 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
   isActive  Boolean  @default(true)
-  posts     Post[]
-}
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean? @default(false)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  String?
+  lastUpdateById String?
+  lastUpdateBy   User?   @relation("UserUpdate", fields: [lastUpdateById], references: [id])
+  updatedUsers   User[]  @relation("UserUpdate")
+
+  items Item[]
 }
 
 model Item {
-  id            String @id @default(uuid())
+  id            String   @id @default(uuid())
   name          String
   quantity      Float
   quantityUnits String
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now()) @updatedAt
+
+  @@index([userId])
 }
