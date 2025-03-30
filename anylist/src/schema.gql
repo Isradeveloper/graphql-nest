@@ -35,12 +35,27 @@ type AuthResponse {
   user: User!
 }
 
+type List {
+  id: ID!
+  name: String!
+  items(limit: Int = 10, offset: Int = 0): [ListItem!]!
+}
+
+type ListItem {
+  id: ID!
+  quantity: Float!
+  completed: Boolean!
+  item: Item!
+}
+
 type Query {
   items(limit: Int = 10, offset: Int = 0, search: String): [Item!]!
   item(id: ID!): Item!
   users(roles: [ValidRoles!] = [], limit: Int = 10, offset: Int = 0, search: String): [User!]!
   user(id: ID!): User!
   revalidateToken: AuthResponse!
+  lists(limit: Int = 10, offset: Int = 0, search: String): [List!]!
+  list(id: ID!): List!
 }
 
 enum ValidRoles {
@@ -58,6 +73,10 @@ type Mutation {
   signup(signupInput: SignUpInput!): AuthResponse!
   login(loginInput: LoginInput!): AuthResponse!
   executeSeed: Boolean!
+  createList(createListInput: CreateListInput!): List!
+  updateList(updateListInput: UpdateListInput!): List!
+  removeList(id: ID!): List!
+  createListItem(createListItemInput: CreateListItemInput!): ListItem!
 }
 
 input CreateItemInput {
@@ -101,4 +120,22 @@ input SignUpInput {
 input LoginInput {
   email: String!
   password: String!
+}
+
+input CreateListInput {
+  """Name of the list"""
+  name: String!
+}
+
+input UpdateListInput {
+  """Name of the list"""
+  name: String
+  id: ID!
+}
+
+input CreateListItemInput {
+  quantity: Int = 0
+  completed: Boolean = false
+  listId: ID!
+  itemId: ID!
 }

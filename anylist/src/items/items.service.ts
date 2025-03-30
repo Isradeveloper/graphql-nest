@@ -2,8 +2,9 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { Item } from './entities/item.entity';
 import { CreateItemInput, UpdateItemInput } from './dto/inputs';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Prisma, User } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { SearchArgs, PaginationArgs } from 'src/common/dto/args';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class ItemsService {

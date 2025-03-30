@@ -28,6 +28,21 @@ model User {
   updatedUsers   User[]  @relation("UserUpdate")
 
   items Item[]
+  lists List[]
+}
+
+model List {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  itemLists ItemList[]
+
+  @@index([userId])
 }
 
 model Item {
@@ -35,10 +50,32 @@ model Item {
   name          String
   quantity      Float
   quantityUnits String
-  userId        String
-  user          User     @relation(fields: [userId], references: [id])
   createdAt     DateTime @default(now())
   updatedAt     DateTime @default(now()) @updatedAt
 
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  itemLists ItemList[]
+
   @@index([userId])
+}
+
+model ItemList {
+  id        String  @id @default(uuid())
+  quantity  Float   @default(1)
+  completed Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  itemId String
+  item   Item   @relation(fields: [itemId], references: [id])
+
+  listId String
+  list   List   @relation(fields: [listId], references: [id])
+
+  @@unique([itemId, listId])
+  @@index([itemId])
+  @@index([listId])
 }
