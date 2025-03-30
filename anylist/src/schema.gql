@@ -8,17 +8,12 @@ type User {
   email: String!
   roles: [String!]!
   isActive: Boolean!
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  createdAt: Date!
+  updatedAt: Date!
   lastUpdateBy: User
   itemCount: Int!
   items(limit: Int = 10, offset: Int = 0, search: String): [Item!]!
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type Item {
   id: ID!
@@ -26,8 +21,8 @@ type Item {
   quantity: Float!
   quantityUnits: String!
   user: User
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  createdAt: Date!
+  updatedAt: Date!
 }
 
 type AuthResponse {
@@ -47,6 +42,9 @@ type ListItem {
   completed: Boolean!
   item: Item!
 }
+
+"""DateTime custom scalar type"""
+scalar Date
 
 type Query {
   items(limit: Int = 10, offset: Int = 0, search: String): [Item!]!

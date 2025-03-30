@@ -15,6 +15,7 @@ import { SeedModule } from './seed/seed.module';
 import { CommonModule } from './common/common.module';
 import { ListModule } from './list/list.module';
 import { ListItemModule } from './list-item/list-item.module';
+import { DateScalar } from './common/scalars/datetime.scalar';
 
 @Module({
   imports: [
@@ -57,6 +58,6 @@ import { ListItemModule } from './list-item/list-item.module';
     ListItemModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [DateScalar],
 })
 export class AppModule {}
